@@ -54,6 +54,11 @@
                                  :headers headers
                                  :form-params params}))
 
+(defmethod send-http :delete [method url params headers]
+  (http/delete (prepend-url url) {:timeout 2000
+                                 :headers headers
+                                 :form-params params}))
+
 (defmethod send-http :post-json [method url params headers]
   (http/post (prepend-url url) {:timeout 2000
                                  :headers (assoc headers "Content-Type" "application/json")
@@ -172,13 +177,49 @@
 
 ; Users.drafts
 
+(defn draft-create
+  "Create a draft with the DRAFT label."
+  []
+  (throw (Exception. "Not yet implemented.")))
+
+(defn draft-delete
+  "Create a draft with the DRAFT label."
+  [message-id]
+  (api-request :delete (str "/users/me/drafts/" message-id) {} :auth (get-token)))
+
+(defn draft-get
+  "Returns the record for a given draft message id."
+  [message-id & {:keys [format]
+                 :or {format :full}}]
+  (api-request :get (str "/users/me/drafts/" message-id) {:format (name format)} :auth (get-token)))
+
+(defn draft-list
+  "Returns all draft messages."
+  [& {:keys [maxResults pageToken] :or {maxResults 10}}]
+  (api-request :get "/users/me/drafts/" {:maxResults maxResults :pageToken pageToken} :auth (get-token)))
+
+(defn draft-create
+  "Create a draft with the DRAFT label."
+  []
+  (throw (Exception. "Not yet implemented.")))
+
 ; Users.history
+
+(defn history-list
+  "Create a draft with the DRAFT label."
+  [& {:keys [maxResults pageToken labelId startHistoryId]
+      :or {maxResults 10}}]
+  (let [params {:maxResults maxResults
+                :pageToken pageToken
+                :startHistoryId startHistoryId
+                :labelId labelId}]
+    (api-request :get "/users/me/history" params :auth (get-token))))
 
 ; Users.labels
 
 ; Users.messages
 
-(defn messages-list
+(defn message-list
   "Returns a list of messages based on a given query."
   [query & {:keys [labels max-results page] :or {max-results 10}}]
   (let [params {:includeSpamTrash false
@@ -188,18 +229,18 @@
                 :q query}]
     (api-request :get "/users/me/messages/" params :auth (get-token))))
 
-(defn messages-trash
+(defn message-trash
   "Moves a specific message to the trash can."
   [message-id]
   (api-request :post (str "/users/me/messages/" message-id "/trash") {} :auth (get-token)))
 
-(defn messages-get
+(defn message-get
   "Returns the record for a given message id."
   [message-id & {:keys [format]
                  :or {format :full}}]
   (api-request :get (str "/users/me/messages/" message-id) {:format (name format)} :auth (get-token)))
 
-(defn messages-send
+(defn message-send
   "Sends an email to a specified user."
   [message & {:keys [thread-id]}]
   (let [message (if (map? message) (map->mime message) message)
