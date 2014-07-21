@@ -165,8 +165,8 @@
     (doto (MimeMessage. session)
           (.setFrom (address (:from msg)))
           (.addRecipient Message$RecipientType/TO (address (:to msg)))
-          ;(when (:bcc msg) (.addRecipient Message$RecipientType/CC (address (:cc msg)))
-          ;(when (:bcc msg) (.addRecipient Message$RecipientType/BCC (address (:bcc msg))))
+          ;(.addRecipient Message$RecipientType/CC (address (:cc msg)))
+          ;(.addRecipient Message$RecipientType/BCC (address (:bcc msg)))
           (.setSubject (:subject msg))
           (.setText (:body msg)))))
 
