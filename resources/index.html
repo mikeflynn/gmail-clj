@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Google Client Application Authentication</title>
+
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+  <script type="text/javascript">
+  var getParam = function(name) {
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( window.location.href );
+    if( results == null ) {
+      return null;
+    } else {
+      return results[1];
+    }
+  };
+
+  var getUri = function() {
+    return window.location.origin + window.location.pathname;
+  }
+
+  var makeRequest = function (e) {
+    var key = jQuery('#appKey').val();
+    var secret = jQuery('#appSecret').val();
+    var scopes = jQuery('#appScopes').val().replace(/\r?\n/g, ',');
+
+    var authParams = {
+      state: key + "|" + secret + "|" + scopes,
+      response_type: 'code',
+      redirect_uri: getUri(),
+      client_id: key,
+      scope: scopes,
+      access_type: 'offline',
+      approval_prompt: 'force'
+    };
+
+    window.location.href = "https://accounts.google.com/o/oauth2/auth?" + jQuery.param(authParams);
+  }
+
+  var handleResponse = function() {
+    if(getParam('state') != null) {
+      var state = decodeURIComponent(getParam('state')).split('|');
+      jQuery('#appKey').val(state[0]);
+      jQuery('#appSecret').val(state[1]);
+      jQuery('#appScopes').val(state[2]);
+      jQuery('#authUrl').val(getUri());
+      jQuery('#authCode').val(getParam('code'));
+
+      var tokenReq = "POST: https://accounts.google.com/o/oauth2/token\n\n" +
+        "code: " + jQuery('#authCode').val() + "\n" +
+        "client_id: " + jQuery('#appKey').val() + "\n" +
+        "client_secret: " + jQuery('#appSecret').val() + "\n" +
+        "redirect_uri: " + jQuery('#authUrl').val() + "\n" +
+        "grant_type: authorization_code";
+      jQuery('#tokenReq').val(tokenReq);
+
+      jQuery('#results').show();
+    }
+  };
+
+  var fetchToken = function() {
+    var data = {
+      code: jQuery('#authCode').val(),
+      client_id: jQuery('#appKey').val(),
+      client_secret: jQuery('#appSecret').val(),
+      redirect_uri: jQuery('#authUrl').val(),
+      grant_type: 'authorization_code'
+    };
+
+//    jQuery.post('https://accounts.google.com/o/oauth2/token', data, function(resp) {
+//      if(resp.access_token) {
+//        jQuery('#authToken').val(resp.access_token);
+//        jQuery('#refreshToken').val(resp.refresh_token);
+//        jQuery('#authExpires').val(resp.expires_in);
+//      } else {
+//        alert(resp.error);
+//      }
+//    });
+  };
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Google Client Authentication</h1>
+
+    <form id="settings" role="form" style="margin-bottom: 20px;">
+      <div class="form-group">
+        <label for="appKey">Client ID</label>
+        <input type="text" class="form-control" id="appKey" placeholder="Enter Client ID">
+      </div>
+      <div class="form-group">
+        <label for="appSecret">Client Secret</label>
+        <input type="text" class="form-control" id="appSecret" placeholder="Enter Client Secret">
+      </div>
+      <div class="form-group">
+        <label for="appResponse">Scopes (one per line)</label>
+        <textarea id="appScopes" class="form-control" rows="5"></textarea>
+      </div>
+      <button type="button" class="btn btn-danger btn-lg" id="authBtn">Auth with Google</button>
+    </form>
+
+    <div id="results" class="panel panel-default" style="display: none;">
+      <div class="panel-heading">Authorization Results</div>
+      <div class="panel-body">
+        <form role="form">
+          <div class="form-group">
+            <label for="authUrl">Callback URI</label>
+            <input type="text" class="form-control" id="authUrl" placeholder="Callback URI">
+          </div>
+          <div class="form-group">
+            <label for="authCode">Code</label>
+            <input type="text" class="form-control" id="authCode" placeholder="Code (for server side auth)">
+          </div>
+          <div class="form-group">
+            <label>Token Request</label>
+            <textarea id="tokenReq" class="form-control" rows="10"></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    jQuery('#authBtn').click(makeRequest);
+
+    handleResponse();
+  </script>
+</body>
+</html>
