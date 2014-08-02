@@ -2,12 +2,39 @@
 
 A Clojure library designed to abstract the details of the GMail REST API: [developers.google.com/gmail/api/](https://developers.google.com/gmail/api/)
 
+## Installation
+
+`gmail-clj` is available as a Maven artifact from [Clojars](https://clojars.org/gmail-clj):
+
+![](https://clojars.org/gmail-clj/latest-version.svg)
+
 ## Usage
 
-FIXME
+Require the library in your REPL:
+
+```clojure
+  (require '[gmail-clj.core :as gmail])
+```
+
+...or in your project.clj file
+
+```clojure
+  (ns my-app.core
+    (:require [gmail-clj.core :as gmail]))
+```
+
+Be sure to set your Beats API Application Key and Secret:
+
+```clojure
+  (gmail/set-client-secret! "aaaaa")
+  (gmail/set-client-id! "bbbbbb")
+  (gmail/set-refresh-token! "ccccc")
+  (gmail/set-access-token! "dddddd") ; Optional. If you already have an access token.
+```
 
 ## To Do
 
+1. Sending email is very basic at the moment: no attachments, no multiple bcc / cc / to.
 
 ## License
 
