@@ -228,6 +228,30 @@
 
 ; Users.labels
 
+(defn label-create
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn label-delete
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn label-list
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn label-update
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn label-get
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn label-patch
+  []
+  (throw (Exception. "Not yet implemented."))
+
 ; Users.messages
 
 (defn message-list
@@ -262,6 +286,30 @@
     (api-request :post-json "/users/me/messages/send" {:raw (URLEncoder/encode b64 "UTF-8")} :auth (get-token) :resp :raw)))
 
 ; Users.threads
+
+(defn thread-get
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn thread-list
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn thread-modify
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn thread-delete
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn thread-trash
+  []
+  (throw (Exception. "Not yet implemented."))
+
+(defn thread-untrash
+  []
+  (throw (Exception. "Not yet implemented."))
 
 ; Testing code...
 (set-client-id! "1027354928765-67in4888cilm4r81ek4s110asr59abnp.apps.googleusercontent.com")
