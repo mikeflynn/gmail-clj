@@ -183,7 +183,7 @@
   (throw (Exception. "Not yet implemented.")))
 
 (defn draft-delete
-  "Create a draft with the DRAFT label."
+  "Delete a draft by message-id."
   [message-id]
   (api-request :delete (str "/users/me/drafts/" message-id) {} :auth (get-token)))
 
@@ -206,7 +206,7 @@
 ; Users.history
 
 (defn history-list
-  "Create a draft with the DRAFT label."
+  "Pull a list of items from a user's history."
   [& {:keys [maxResults pageToken labelId startHistoryId]
       :or {maxResults 10}}]
   (let [params {:maxResults maxResults
