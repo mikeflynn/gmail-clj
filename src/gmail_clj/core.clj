@@ -179,8 +179,13 @@
 
 (defn draft-create
   "Create a draft with the DRAFT label."
-  []
-  (throw (Exception. "Not yet implemented.")))
+  [message]
+  (let [message (if (map? message) (map->mime message) message)
+        bytes (with-open [os (java.io.ByteArrayOutputStream.)]
+                (.writeTo message os)
+                (.toByteArray os))
+        b64 (str->b64 bytes)]
+    (api-request :post-json "/users/me/drafts" {:message {:raw (URLEncoder/encode b64 "UTF-8")}} :auth (get-token) :resp :raw)))
 
 (defn draft-delete
   "Delete a draft by message-id."
@@ -198,10 +203,16 @@
   [& {:keys [maxResults pageToken] :or {maxResults 10}}]
   (api-request :get "/users/me/drafts/" {:maxResults maxResults :pageToken pageToken} :auth (get-token)))
 
-(defn draft-create
-  "Create a draft with the DRAFT label."
-  []
-  (throw (Exception. "Not yet implemented.")))
+(defn draft-update
+  "Update a draft via a message-id."
+  [message-id]
+  (api-request :put (str "/users/me/drafts/" message-id) {} :auth (get-token)))
+
+(defn draft-send
+  "Send a draft via the message-id."
+  [message-id]
+  (let []
+    (api-request :post-json "/users/me/drafts/send" {:id message-id} :auth (get-token))))
 
 ; Users.history
 
