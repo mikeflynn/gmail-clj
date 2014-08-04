@@ -23,7 +23,7 @@ Require the library in your REPL:
     (:require [gmail-clj.core :as gmail]))
 ```
 
-Be sure to set your Beats API Application Key and Secret:
+Be sure to set your Google API Application Key and Secret:
 
 ```clojure
   (gmail/set-client-secret! "aaaaa")
