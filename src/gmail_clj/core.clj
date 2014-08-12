@@ -244,7 +244,7 @@
 (defn label-delete
   "Deletes the specified label and removes it from any messages and threads that it is applied to."
   [label-id]
-  (api-request :delete (str "/users/me/labels/" label-id) params :auth (get-token)))
+  (api-request :delete (str "/users/me/labels/" label-id) {} :auth (get-token)))
 
 (defn label-list
   "Lists all labels in the user's mailbox."
@@ -316,7 +316,7 @@
   [& {:keys [includeSpamTrash labelIds maxResults pageToken q]
       :or {includeSpamTrash false maxResults 25}}]
   (let [labelIds (clojure.string/join "&" (map #(str "labelIds=" %) labelIds))
-        params {:includeSpamTrash includePamTrash
+        params {:includeSpamTrash includeSpamTrash
                 :maxResults maxResults
                 :pageToken pageToken
                 :q q}]
