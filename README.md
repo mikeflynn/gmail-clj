@@ -34,9 +34,11 @@ Be sure to set your Google API Application Key and Secret:
 
 ## To Do
 
+Here's a few things I haven't gotten to yet, mostly because I didn't need them in my specific use case. If you'd like to dive in an help on these, that would much appreciated!
+
 1. Sending email is very basic at the moment (to, subject, body): no bcc, no cc, no multiple addresses bcc / cc / to.
 2. All endpoints are hard-coded to the "me" authorized email identifier at this time.
-3. Email attachments!
+3. Email attachments!!
 
 ## License
 
