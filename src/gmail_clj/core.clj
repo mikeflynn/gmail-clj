@@ -100,7 +100,7 @@
                                       walk/keywordize-keys)]
                         (if (:error body)
                             (throw (Exception. (if (:message body) (:message body)
-                                                                   "Error or blank response from Beats Platform.")))
+                                                                   "Error or blank response from GMail.")))
                             body))
                 :raw @response
                 :url {:url (get-in @response [:opts :url])})
@@ -173,7 +173,7 @@
   [msg]
   (let [session (Session/getDefaultInstance (java.util.Properties.))]
     (doto (MimeMessage. session)
-          (.setFrom (address (:from msg)))
+          (.setFrom (address "me@gmail.com"))
           (.addRecipient Message$RecipientType/TO (address (:to msg)))
           ;(.addRecipient Message$RecipientType/CC (address (:cc msg)))
           ;(.addRecipient Message$RecipientType/BCC (address (:bcc msg)))
@@ -190,7 +190,7 @@
                 (.writeTo message os)
                 (.toByteArray os))
         b64 (str->b64 bytes)]
-    (api-request :post-json "/users/me/drafts" {:message {:raw (URLEncoder/encode b64 "UTF-8")}} :auth (get-token) :resp :raw)))
+    (api-request :post-json "/users/me/drafts" {:message {:raw (URLEncoder/encode b64 "UTF-8")}} :auth (get-token))))
 
 (defn draft-delete
   "Delete a draft by message-id."
@@ -223,8 +223,8 @@
 
 (defn history-list
   "Pull a list of items from a user's history."
-  [& {:keys [maxResults pageToken labelId startHistoryId]
-      :or {maxResults 10}}]
+  [startHistoryId & {:keys [maxResults pageToken labelId ]
+                     :or {maxResults 10}}]
   (let [params {:maxResults maxResults
                 :pageToken pageToken
                 :startHistoryId startHistoryId
@@ -295,14 +295,14 @@
   (api-request :get (str "/users/me/messages/" message-id) {:format (name format)} :auth (get-token)))
 
 (defn message-send
-  "Sends an email to a specified user."
+  "Sends an email to a specified user. Takse MIME obj or map with :to :subject :body"
   [message & {:keys [thread-id]}]
   (let [message (if (map? message) (map->mime message) message)
         bytes (with-open [os (java.io.ByteArrayOutputStream.)]
                 (.writeTo message os)
                 (.toByteArray os))
         b64 (str->b64 bytes)]
-    (api-request :post-json "/users/me/messages/send" {:raw (URLEncoder/encode b64 "UTF-8")} :auth (get-token) :resp :raw)))
+    (api-request :post-json "/users/me/messages/send" {:raw b64} :auth (get-token))))
 
 ; Users.threads
 
