@@ -34,7 +34,7 @@ Be sure to set your Google API Application Key and Secret:
 
 ## Authorizing
 
-This library takes your API information and will do an authorization based on a refresh token. To generate the refresh token you need to write your own interface with the Google OAuth endpoint, but for development and testing I've included an HTML file that does the basic OAuth handshake and returns the refresh token: [/resources/index](https://github.com/mikeflynn/gmail-clj/blob/master/resources/index.html).
+This library takes your API information and will do an authorization based on a refresh token. To generate the refresh token you need to write your own interface with the Google OAuth endpoint, but for development and testing I've included an HTML file that does the basic OAuth handshake and returns the refresh token: [/resources/index.html](https://github.com/mikeflynn/gmail-clj/blob/master/resources/index.html).
 
 ## To Do
 
