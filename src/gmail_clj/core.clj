@@ -64,6 +64,11 @@
                                  :headers (assoc headers "Content-Type" "application/json")
                                  :body (json/generate-string params)}))
 
+(defmethod send-http :put-json [method url params headers]
+  (http/put (prepend-url url) {:timeout 2000
+                               :headers (assoc headers "Content-Type" "application/json")
+                               :body (json/generate-string params)}))
+
 (defn- check-auth
   "Checks for auth token."
   [token]
@@ -229,20 +234,32 @@
 ; Users.labels
 
 (defn label-create
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Creates a new label."
+  [name & {:keys [labelListVisibility messageListVisibility]
+           :or {labelListVisibility "labelShowIfUnread" messageListVisibility "show"}}]
+  (let [params {:labelListVisibility labelListVisibility
+                :messageListVisibility messageListVisibility}]
+    (api-request :post-json "/users/me/labels" params :auth (get-token))))
 
 (defn label-delete
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Deletes the specified label and removes it from any messages and threads that it is applied to."
+  [label-id]
+  (api-request :delete (str "/users/me/labels/" label-id) params :auth (get-token)))
 
 (defn label-list
+  "Lists all labels in the user's mailbox."
   []
-  (throw (Exception. "Not yet implemented."))
+  (api-request :get "/users/me/labels/" {} :auth (get-token)))
 
 (defn label-update
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Updates the specified label."
+  [label-id & {:keys [labelListVisibility messageListVisibility name]
+               :or {labelListVisibility "labelShowIfUnread" messageListVisibility "show"}}]
+  (let [params {:id label-id
+                :labelListVisibility labelListVisibility
+                :messageListVisibility messageListVisibility
+                :name name}]
+    (api-request :put-json (str "/users/me/labels/" label-id) params :auth (get-token))))
 
 (defn label-get
   []
@@ -288,28 +305,42 @@
 ; Users.threads
 
 (defn thread-get
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Returns a specific thread."
+  [thread-id]
+  (api-request :get (str "/users/me/threads/" thread-id) {} :auth (get-token)))
 
 (defn thread-list
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Lists all threads in the user's mailbox."
+  [& {:keys [includeSpamTrash labelIds maxResults pageToken q]
+      :or {includeSpamTrash false maxResults 25}}]
+  (let [labelIds (clojure.string/join "&" (map #(str "labelIds=" %) labelIds))
+        params {:includeSpamTrash includePamTrash
+                :maxResults maxResults
+                :pageToken pageToken
+                :q q}]
+    (api-request :get (str "/users/me/threads/?" labelIds) params :auth (get-token))))
 
 (defn thread-modify
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Modifies the labels applied to the thread. This applies to all messages in the thread."
+  [thread-id & {:keys [addLabelIds removeLabelIds]}]
+  (let [params {:addLabelIds addLabelIds
+                :removeLabelIds removeLabelIds}]
+    (api-request :post-json (str "/users/me/threads/" thread-id "/modify") params :auth (get-token))))
 
 (defn thread-delete
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Immediately and permanently deletes the specified thread."
+  [thread-id]
+  (api-request :delete (str "/users/me/threads/" thread-id) {} :auth (get-token)))
 
 (defn thread-trash
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Moves the specified thread to the trash."
+  [thread-id]
+  (api-request :post (str "/users/me/threads/" thread-id "/trash") {} :auth (get-token)))
 
 (defn thread-untrash
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Removes the specified thread from the trash."
+  [thread-id]
+  (api-request :post (str "/users/me/threads/" thread-id "/untrash") {} :auth (get-token)))
 
 ; Testing code...
 (set-client-id! "1027354928765-67in4888cilm4r81ek4s110asr59abnp.apps.googleusercontent.com")
