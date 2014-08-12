@@ -33,7 +33,7 @@
   (alter-var-root (var *refresh-token*) (fn [_] token)))
 
 (defn set-access-token!
-  "Set the temp access token and it's expires time."
+  "Set the temp access token and it's expires time => {:token xxxxxx :expires xxxxxx}"
   [token expires]
   (alter-var-root (var *access-token*) (fn [_] {:token token :expires (+ (now) expires)})))
 

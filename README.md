@@ -34,7 +34,9 @@ Be sure to set your Google API Application Key and Secret:
 
 ## Authorizing
 
-This library takes your API information and will do an authorization based on a refresh token. To generate the refresh token you need to write your own interface with the Google OAuth endpoint, but for development and testing I've included an HTML file that does the basic OAuth handshake and returns the refresh token: [/resources/index.html](https://github.com/mikeflynn/gmail-clj/blob/master/resources/index.html).
+This library takes your API information and will do an authorization based on a refresh token. (*Note: If your app doesn't request a refresh token, you can simply set the access-token with gmail/set-access-token!, but we can't re-authorize after that token expires without a refresh token.*)
+
+To generate the refresh token you need to write your own interface with the Google OAuth endpoint, but for development and testing I've included an HTML file that does the basic OAuth handshake and returns the refresh token: [/resources/index.html](https://github.com/mikeflynn/gmail-clj/blob/master/resources/index.html).
 
 ## To Do
 
@@ -43,7 +45,6 @@ Here's a few things I haven't gotten to yet, mostly because I didn't need them i
 1. Sending email is very basic at the moment (to, subject, body): no bcc, no cc, no multiple addresses bcc / cc / to.
 2. All endpoints are hard-coded to the "me" authorized email identifier at this time.
 3. Email attachments!!
-4. Authorization only works with a refresh token at the moment.
 
 ## License
 
