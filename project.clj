@@ -1,4 +1,4 @@
-(defproject gmail-clj "0.1.0-SNAPSHOT"
+(defproject gmail-clj "0.6"
   :description "A simple Clojure library to interface with the GMail API (read: not imap)"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
