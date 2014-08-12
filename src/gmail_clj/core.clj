@@ -343,8 +343,3 @@
   "Removes the specified thread from the trash."
   [thread-id]
   (api-request :post (str "/users/me/threads/" thread-id "/untrash") {} :auth (get-token)))
-
-; Testing code...
-(set-client-id! "1027354928765-67in4888cilm4r81ek4s110asr59abnp.apps.googleusercontent.com")
-(set-client-secret! "qFt_o9ekrr7_OH2CH-ZlZLyx")
-(set-refresh-token! "1/SG6x5odD0CwNQ_JfYFO9MFK_gKRbC96YRPBaMm43Wp8")
