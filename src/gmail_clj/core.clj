@@ -262,12 +262,14 @@
     (api-request :put-json (str "/users/me/labels/" label-id) params :auth (get-token))))
 
 (defn label-get
-  []
-  (throw (Exception. "Not yet implemented."))
+  "Gets the specified label."
+  [label-id]
+  (api-request :get (str "/users/me/labels/" label-id) {} :auth (get-token)))
 
 (defn label-patch
+  "Updates the specified label. This method supports patch semantics."
   []
-  (throw (Exception. "Not yet implemented."))
+  (throw (Exception. "Not yet implemented.")))
 
 ; Users.messages
 
