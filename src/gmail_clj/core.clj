@@ -99,8 +99,7 @@
                                       json/parse-string
                                       walk/keywordize-keys)]
                         (if (:error body)
-                            (throw (Exception. (if (:message body) (:message body)
-                                                                   "Error or blank response from GMail.")))
+                            (throw (Exception. (or (:message body) "Error or blank response from GMail.")))
                             body))
                 :raw @response
                 :url {:url (get-in @response [:opts :url])})
