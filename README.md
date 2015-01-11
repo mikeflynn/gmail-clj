@@ -48,6 +48,6 @@ Here's a few things I haven't gotten to yet, mostly because I didn't need them i
 
 ## License
 
-Copyright © 2014 Mike Flynn / [@mikeflynn_](http://twitter.com/mikeflynn_)
+Copyright © 2014 Mike Flynn / [@thatmikeflynn](http://twitter.com/thatmikeflynn)
 
 Distributed under the Eclipse Public License, the same as Clojure.
