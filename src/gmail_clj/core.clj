@@ -134,7 +134,9 @@
 
 (defn str->b64 [input]
   (let [input (if (bytes? input) input (.getBytes input))]
-    (String. (b64/encode input) "UTF-8")))
+    (-> (String. (b64/encode input) "UTF-8"))
+        (.replaceAll "\\+" "-")
+        (.replaceAll "/" "_")))
 
 (defn b64->str [input]
   (let [input (if (bytes? input) input (.getBytes input))]
