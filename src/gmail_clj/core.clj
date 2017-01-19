@@ -124,7 +124,7 @@
   "Returns the current active auth token."
   []
   (when (or (nil? *access-token*)
-          (> (:expires *access-token*) (now)))
+            (< (:expires *access-token*) (now)))
     (request-auth))
   (:token *access-token*))
 
