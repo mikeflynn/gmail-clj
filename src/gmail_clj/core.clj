@@ -306,7 +306,7 @@
     (api-request :post-json "/users/me/messages/send" {:raw b64} :auth (get-token))))
 
 (defn attachment-get
-  "Returns the attachment for a given message id and attachment id."
+  "Returns a map with :size and :data for a given message id and attachment id. :data is URL-safe base64 encoded."
   [message-id attachment-id]
   (api-request :get (format "/users/me/messages/%s/attachments/%s" message-id attachment-id) {} :auth (get-token)))
 
