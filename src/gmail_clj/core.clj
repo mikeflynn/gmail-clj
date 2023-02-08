@@ -305,6 +305,12 @@
         b64 (str->b64 bytes)]
     (api-request :post-json "/users/me/messages/send" {:raw b64} :auth (get-token))))
 
+(defn attachment-get
+  "Returns the attachment for a given message id and attachment id."
+  [message-id attachment-id]
+  (api-request :get (format "/users/me/messages/%s/attachments/%s" message-id attachment-id) {} :auth (get-token)))
+
+
 ; Users.threads
 
 (defn thread-get
@@ -344,3 +350,5 @@
   "Removes the specified thread from the trash."
   [thread-id]
   (api-request :post (str "/users/me/threads/" thread-id "/untrash") {} :auth (get-token)))
+
+
